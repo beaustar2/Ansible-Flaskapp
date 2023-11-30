@@ -12,7 +12,7 @@
       when: ansible_distribution == 'CentOS'
 
     - name: Start Flask App
-      command: "nohup python3 /home/ubuntu/Amsible-Flaskapp/app.py &"
+      command: "nohup python3 /home/ubuntu/Ansible-Flaskapp/app.py &"
       async: 60
       poll: 0
       become_user: "{{ ansible_user }}"
