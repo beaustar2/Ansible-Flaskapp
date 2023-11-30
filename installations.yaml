@@ -53,7 +53,7 @@
       args:
         executable: /bin/bash
 
-   - name: Install Flask
+    - name: Install Flask
       pip:
         name: Flask
         executable: pip3
