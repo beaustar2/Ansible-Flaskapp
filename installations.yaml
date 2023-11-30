@@ -33,21 +33,11 @@
     - name: Clone Flask-App from GitHub
       git:
         repo: https://github.com/beaustar2/Ansible-Flaskapp.git
-        dest: /home/ubuntu/Ansible-Flaskapp
+        dest: /home/{{ ansible_user }}/Ansible-Flaskapp
         version: main
       environment:
         GIT_SSH_COMMAND: 'ssh -o StrictHostKeyChecking=no'
-      when: ansible_distribution == 'Ubuntu' 
-
-    - name: Clone Flask-App from GitHub
-      git:
-        repo: https://github.com/beaustar2/Ansible-Flaskapp.git
-        dest: /home/centos/Ansible-Flaskapp
-        version: main
-      environment:
-        GIT_SSH_COMMAND: 'ssh -o StrictHostKeyChecking=no'
-      when: ansible_distribution == 'Centos' 
-    
+     
     - name: Install virtualenv
       pip:
         name: virtualenv
