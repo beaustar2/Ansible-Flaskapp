@@ -53,17 +53,34 @@
       args:
         executable: /bin/bash
 
-    - name: Install Flask library
-      ansible.builtin.pip:
+   - name: Install Flask
+      pip:
         name: Flask
-        executable: /home/{{ ansible_user }}/Ansible-Flaskapp/flask_env/bin/pip3
+        executable: pip3
         state: present
+      when: ansible_distribution == 'CentOS'
+
+    - name: Install Flask 
+      pip:
+        name: Flask
+        executable: /usr/local/bin/pip
+        state: present
+        extra_args: "--ignore-installed"
+      when: ansible_distribution == 'Ubuntu'
 
     - name: Install Gunicorn
-      ansible.builtin.pip:
+      pip:
         name: gunicorn
-        executable: /home/{{ ansible_user }}/Ansible-Flaskapp/flask_env/bin/pip3
+        executable: pip3
         state: present
+      when: ansible_distribution == 'CentOS'
+
+    - name: Install Gunicorn 
+      pip:
+        name: gunicorn
+        executable: /usr/local/bin/pip
+        state: present
+      when: ansible_distribution == 'Ubuntu'
 
     - name: Configure Firewall (Ubuntu)
       ufw:
