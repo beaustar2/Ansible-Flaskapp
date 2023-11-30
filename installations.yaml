@@ -78,7 +78,7 @@
     - name: Install Gunicorn 
       pip:
         name: gunicorn
-        executable: /usr/local/bin/pip
+        executable: /usr/bin/pip
         state: present
       when: ansible_distribution == 'Ubuntu'
 
