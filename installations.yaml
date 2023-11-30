@@ -63,7 +63,7 @@
     - name: Install Flask 
       pip:
         name: Flask
-        executable: /usr/local/bin/pip
+        executable: /usr/bin/pip
         state: present
         extra_args: "--ignore-installed"
       when: ansible_distribution == 'Ubuntu'
