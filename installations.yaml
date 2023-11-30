@@ -37,7 +37,7 @@
         version: main
       environment:
         GIT_SSH_COMMAND: 'ssh -o StrictHostKeyChecking=no'
-      when: ansibibe_distribution == 'Ubuntu' 
+      when: ansible_distribution == 'Ubuntu' 
 
     - name: Clone Flask-App from GitHub
       git:
@@ -46,7 +46,7 @@
         version: main
       environment:
         GIT_SSH_COMMAND: 'ssh -o StrictHostKeyChecking=no'
-      when: ansibibe_distribution == 'Centos' 
+      when: ansible_distribution == 'Centos' 
     
     - name: Install virtualenv
       pip:
