@@ -1,0 +1,99 @@
+---
+- name: Install required packages and setup virtual environment
+  hosts: webservers
+  become: yes
+
+  tasks:
+    - name: Install required packages (Ubuntu)
+      apt:
+        name:
+          - python3
+          - python3-pip
+          - git
+          - python3-venv
+          - ufw
+        state: present
+      when: ansible_distribution == "Ubuntu"
+
+    - name: Install required packages (CentOS)
+      yum:
+        name:
+          - python3
+          - python3-pip
+          - git
+          - firewalld
+        state: present
+      when: ansible_distribution == "CentOS"
+
+    - name: Install virtualenv
+      pip:
+        name: virtualenv
+        executable: pip3
+        state: present
+
+    - name: Set up a virtual environment
+      become: yes
+      command: "python3 -m venv /home/{{ ansible_user }}/Flask-App/flask_env"
+
+    - name: Activate Flask virtual environment
+      ansible.builtin.shell: source /home/{{ ansible_user }}/Flask-App/flask_env/bin/activate
+      args:
+        executable: /bin/bash
+
+    - name: Install Flask library
+      ansible.builtin.pip:
+        name: Flask
+        executable: /home/{{ ansible_user }}/Flask-App/flask_env/bin/pip3
+        state: present
+
+    - name: Install Gunicorn
+      ansible.builtin.pip:
+        name: gunicorn
+        executable: /home/{{ ansible_user }}/Flask-App/flask_env/bin/pip3
+        state: present
+
+    - name: Configure Firewall (Ubuntu)
+      ufw:
+        rule: allow
+        port: 5000
+      when: ansible_distribution == 'Ubuntu'
+
+    - name: Configure Firewall (Ubuntu)
+      ufw:
+        rule: allow
+        port: 22
+      when: ansible_distribution == 'Ubuntu'
+
+    - name: Configure Firewall (CentOS)
+      firewalld:
+        port: 5000/tcp
+        permanent: yes
+        state: enabled
+      when: ansible_distribution == 'CentOS'
+
+    - name: Restart firewalld for CentOS
+      systemd:
+        name: firewalld
+        state: restarted
+      become: yes
+      when: ansible_distribution == 'CentOS'
+
+    - name: Enable UFW for Ubuntu
+      command: ufw --force enable
+      become: yes
+      when: ansible_distribution == 'Ubuntu'
+
+    - name: Start Flask App
+      command: "nohup python3 /home/centos/Flask-App/app.py &"
+      async: 60
+      poll: 0
+      become_user: "{{ ansible_user }}"
+      when: ansible_distribution == 'CentOS'
+
+    - name: Start Flask App
+      command: "nohup python3 /home/ubuntu/Flask-App/app.py &"
+      async: 60
+      poll: 0
+      become_user: "{{ ansible_user }}"
+      when: ansible_distribution == 'Ubuntu'
+...
